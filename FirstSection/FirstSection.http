@@ -1,0 +1,45 @@
+@FirstSection_HostAddress = https://localhost:7274
+
+GET {{FirstSection_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{FirstSection_HostAddress}}/api/hotels
+
+###
+
+POST {{FirstSection_HostAddress}}/api/hotels
+Content-Type: application/json
+
+{
+  
+  "id": 7,
+  "name": "Grand Plaza",
+  "address": "123 Main St",
+  "rating": 4.5
+
+}
+
+###
+
+@id=4
+DELETE {{FirstSection_HostAddress}}/api/hotels/{{id}}
+
+###
+
+GET {{FirstSection_HostAddress}}/api/hotels/{{id}}
+
+###
+
+PUT {{FirstSection_HostAddress}}/api/hotels/{{id}}
+Content-Type: application/json
+
+{
+  "id": 7,
+  "name": "new plaza",
+  "address": "123 Main St",
+  "rating": 4.4
+}
+
+###

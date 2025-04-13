@@ -9,7 +9,7 @@ namespace FirstSection.Controllers
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        private static List<Hotel> hotels = new List<Hotel>
+        private static List<Hotel> hotels = new List <Hotel>
         {
             new Hotel{Id=1,Name="Grand Plaza", Address ="123 Main St", Rating= 4.5},
             new Hotel{Id=2,Name="Ocean View", Address ="456 Beach Rd", Rating= 4}

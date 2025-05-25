@@ -4,6 +4,7 @@ using FirstSection.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FirstSection.Migrations
 {
     [DbContext(typeof(HotelListingDbContext))]
-    partial class HotelListingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250427101252_AddedIdentityTables")]
+    partial class AddedIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,26 +116,6 @@ namespace FirstSection.Migrations
                     b.HasKey("CountryId");
 
                     b.ToTable("Countries");
-
-                    b.HasData(
-                        new
-                        {
-                            CountryId = 2,
-                            Name = "Jamaica",
-                            ShortName = "JAM"
-                        },
-                        new
-                        {
-                            CountryId = 8,
-                            Name = "Bahamas",
-                            ShortName = "BS"
-                        },
-                        new
-                        {
-                            CountryId = 9,
-                            Name = "Iceland",
-                            ShortName = "ICE"
-                        });
                 });
 
             modelBuilder.Entity("FirstSection.Data.Hotel", b =>
@@ -160,32 +143,6 @@ namespace FirstSection.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Hotel");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "123 Ocean Drive",
-                            CountryId = 1,
-                            Name = "Hilton Hotel",
-                            Rating = 4.5
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "456 Mountain Road",
-                            CountryId = 2,
-                            Name = "Marriott Hotel",
-                            Rating = 4.2000000000000002
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "789 Beach Avenue",
-                            CountryId = 1,
-                            Name = "Sunset Resort",
-                            Rating = 4.7999999999999998
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -213,20 +170,6 @@ namespace FirstSection.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e7b8a6f2-6f27-4dcb-bd8b-50805a789d3a",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "a2d965a4-7f9e-4cb0-8d44-52e2e8bb0cd2",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

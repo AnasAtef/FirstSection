@@ -6,9 +6,9 @@ namespace FirstSection.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly HotelListingDbContext _context;
+        private readonly FitnessDbContext _context;
 
-        public GenericRepository(HotelListingDbContext context )
+        public GenericRepository(FitnessDbContext context )
         {
             this._context = context;
         }

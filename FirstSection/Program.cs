@@ -15,9 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 var connectionString = builder.Configuration.GetConnectionString("HotelListingDbString");
-builder.Services.AddDbContext<HotelListingDbContext>(options =>
+builder.Services.AddDbContext<FitnessDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddIdentityCore<APIUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<HotelListingDbContext>();
+builder.Services.AddIdentityCore<APIUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<FitnessDbContext>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,6 +26,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<ICountryRepository,CountriesRepository>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
+builder.Services.AddScoped<IFitnessCategoryRepository, FitnessCategoryRepository>();
 builder.Services.AddAuthentication(options => {  
 
     options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;

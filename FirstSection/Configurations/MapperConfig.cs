@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FirstSection.Data;
 using FirstSection.Models.Country;
+using FirstSection.Models.FitnessCategory;
 using FirstSection.Models.Hotel;
 using FirstSection.Models.Users;
 namespace FirstSection.Configurations
@@ -14,9 +15,11 @@ namespace FirstSection.Configurations
             CreateMap<Country, CountryDto>().ReverseMap();
             CreateMap<Hotel, HotelDto>().ReverseMap();
             CreateMap<Country, UpdateCountryDto>().ReverseMap();
-            CreateMap < Hotel, CreateHotelDto>().ReverseMap();
+            CreateMap <Hotel, CreateHotelDto>().ReverseMap();
             CreateMap<ApiUserDto, APIUser>().ReverseMap();
-
+            CreateMap<CreateFitnessCategoryDto, FitnessCategory>().ReverseMap();
+            CreateMap<UpdateFitnessCategoryDto, FitnessCategory>().ReverseMap();
+            CreateMap<GetFitnessCategory, FitnessCategory>().ReverseMap();
 
         }
     }

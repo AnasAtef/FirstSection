@@ -4,7 +4,7 @@ using System.Net;
 
 namespace FirstSection.Data.configuration
 {
-    public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
+    public class FitnessDbContext : IEntityTypeConfiguration<Hotel>
     {
         public void Configure(EntityTypeBuilder<Hotel> builder)
         {

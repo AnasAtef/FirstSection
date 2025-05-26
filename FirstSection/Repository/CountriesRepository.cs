@@ -6,9 +6,9 @@ namespace FirstSection.Repository
 {
     public class CountriesRepository:GenericRepository <Country>, ICountryRepository 
     {
-        private readonly HotelListingDbContext _context;
+        private readonly FitnessDbContext _context;
 
-        public CountriesRepository(HotelListingDbContext context):base(context)
+        public CountriesRepository(FitnessDbContext context):base(context)
         {
             this._context = context;
         }

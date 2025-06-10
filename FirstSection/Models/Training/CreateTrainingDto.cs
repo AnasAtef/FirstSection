@@ -2,7 +2,7 @@
 
 namespace FirstSection.Models.Training
 {
-    public class CreateCardioTrainingDto: BaseTrainingDto
+    public class CreateTrainingDto: BaseTrainingDto
     {
         public Guid Id { get; set; }
     }

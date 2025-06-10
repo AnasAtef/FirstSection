@@ -1,6 +1,6 @@
 ﻿namespace FirstSection.Models.Training
 {
-    public class CreateStrengthDto: BaseTrainingDto
+    public class GetTrainingDto : BaseTrainingDto
     {
         public Guid Id { get; set; }
     }

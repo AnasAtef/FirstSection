@@ -1,105 +1,105 @@
 ﻿using AutoMapper;
 using FirstSection.Contracts;
 using FirstSection.Data;
-using FirstSection.Models.Country;
-using FirstSection.Repository;
-using Microsoft.AspNetCore.Http;
+using FirstSection.Models.UserFitnessPlan;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FirstSection.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "User")]
     public class UserFitnessPlanController : ControllerBase
     {
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
         private readonly IUserFitnessPlanRepository _userFitnessPlanRepository;
-        public UserFitnessPlanController(IUserFitnessPlanRepository userFitnessPlanRepository)
+        public UserFitnessPlanController(IUserFitnessPlanRepository userFitnessPlanRepository, IMapper mapper)
         {
             this._userFitnessPlanRepository = userFitnessPlanRepository;
+            this._mapper = mapper;
         }
 
-        // GET: api/Countries
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
+
+        [HttpPost]
+        public async Task<ActionResult<GetUserFitnessPlanDto>> CreateUserFitnessPlan(CreateUserFitnessPlanDto createUserFitnessPlanDto)
         {
-            var countries = await _userFitnessPlanRepository.GetAllAsync();
-            var records = mapper.Map<List<GetCountryDto>>(countries);
-            return Ok(records);
-        }
-
-        // GET: api/Countries/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CountryDto>> GetCountry(int id)
-        {
-            var country = await _userFitnessPlanRepository.GetAsync(id);
-
-
-            if (country == null)
-            {
-                return NotFound();
-            }
-            var record = mapper.Map<CountryDto>(country);
-            return Ok(country);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCountry(int id, UpdateCountryDto updatecountrydto)
-        {
-            if (id != updatecountrydto.Id)
-            {
-                return BadRequest();
-            }
-
-            //_context.Entry(updatecountrydto).State = EntityState.Modified;
-            var country = await _userFitnessPlanRepository.GetAsync(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            mapper.Map(updatecountrydto, country);
-
             try
             {
-                await _userFitnessPlanRepository.UpdateAsync(country);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await CountryExists(id))
+                if (!ModelState.IsValid)
                 {
-                    return NotFound();
+                    return BadRequest(ModelState);
                 }
-                else
-                {
-                    throw;
-                }
+                var userFitnessPlan = _mapper.Map<UserFitnessPlan>(createUserFitnessPlanDto);
+                userFitnessPlan.Id = Guid.NewGuid();
+                var createdUserFitnessPlan = await _userFitnessPlanRepository.AddAsync(userFitnessPlan);
+                return StatusCode(201, _mapper.Map<GetUserFitnessPlanDto>(createdUserFitnessPlan));
             }
-
-            return NoContent();
-        }
-
-     
-
-        // DELETE: api/Countries/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCountry(int id)
-        {
-            var country = _userFitnessPlanRepository.GetAsync(id);
-            if (country == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-            await _userFitnessPlanRepository.DeleteAsync(id);
 
-            return NoContent();
         }
 
-        private async Task<bool> CountryExists(int id)
+        [HttpGet("GetUserFitnessPlans")]
+      
+        public async Task<ActionResult<IEnumerable<GetUserFitnessPlanDto>>> GetUserFitnessPlans()
         {
-            return await _userFitnessPlanRepository.Exists(id);
+            try
+            {
+                // Try multiple claim types to get the user ID
+                var currentUserId = GetCurrentUserId();
+
+                if (string.IsNullOrEmpty(currentUserId))
+                {
+                    return Unauthorized("User not authenticated or invalid user ID");
+                }
+
+                if (!Guid.TryParse(currentUserId, out var userId))
+                {
+                    return BadRequest("Invalid user ID format");
+                }
+
+                // Fetch user fitness plans with related data
+                var userFitnessPlans = await _userFitnessPlanRepository.GetUserFitnessPlansAsync(userId);
+
+                // Map to DTOs using AutoMapper
+                var userFitnessPlanDtos = _mapper.Map<IEnumerable<GetUserFitnessPlanDto>>(userFitnessPlans);
+
+                return Ok(userFitnessPlanDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while retrieving fitness plans");
+            }
         }
+
+        private string? GetCurrentUserId()
+        {
+            // Try different claim types that might contain the user ID
+            var userIdClaims = new[]
+            {
+                "nameid",                    // Your JWT uses this
+                ClaimTypes.NameIdentifier,   // Standard claim type
+                "sub",                       // Standard JWT subject claim
+                "userId",                    // Custom claim
+                "id"                         // Another possible custom claim
+            };
+
+            foreach (var claimType in userIdClaims)
+            {
+                var claim = User.FindFirst(claimType);
+                if (claim != null && !string.IsNullOrEmpty(claim.Value))
+                {
+                    return claim.Value;
+                }
+            }
+
+            return null;
+        }
+
 
     }
 }

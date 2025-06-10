@@ -17,27 +17,27 @@ namespace FirstSection.Repository
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AuthManager(IMapper mapper, UserManager<APIUser> userManager,IConfiguration configuration)
+        public AuthManager(IMapper mapper, UserManager<APIUser> userManager, IConfiguration configuration)
         {
             _mapper = mapper;  // Corrected the assignment
             this._userManager = userManager;
             this._configuration = configuration;
         }
 
-       
+
 
         public IMapper Mapper => _mapper; // Correct property getter
 
         public async Task<AuthResponseDto> Login(LoginDto loginDto)
         {
-            var user =await _userManager.FindByEmailAsync(loginDto.Email);
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
             bool isValidUser = await _userManager.CheckPasswordAsync(user, loginDto.Password);
-            if (user==null||isValidUser==false)
+            if (user == null || isValidUser == false)
             {
 
-                return null; 
+                return null;
             }
-             
+
 
 
             var token = await GenerateToken(user);
@@ -48,10 +48,10 @@ namespace FirstSection.Repository
             };
 
 
-            
+
         }
 
-     
+
         public async Task<IEnumerable<IdentityError>> Register(ApiUserDto userDto)
         {
             // Map userDto to APIUser
@@ -87,32 +87,40 @@ namespace FirstSection.Repository
         }
 
 
-        private async Task<string>GenerateToken(APIUser user) 
+        private async Task<string> GenerateToken(APIUser user)
         {
-            var SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
-            var credentials = new SigningCredentials(SecurityKey,SecurityAlgorithms.HmacSha256);
+            // 🔍 Use configuration instead of hardcoded values
+            var key = _configuration["JwtSettings:Key"];
+            var issuer = _configuration["JwtSettings:Issuer"];
+            var audience = _configuration["JwtSettings:Audience"];
+            var durationInMinutes = Convert.ToInt32(_configuration["JwtSettings:DurationInMinutes"]);
+
+            var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim("nameid", user.Id), // This matches your controller GetCurrentUserId() method
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+    };
+
             var roles = await _userManager.GetRolesAsync(user);
-            var RoleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x)).ToList();
-            var UserClaims = await _userManager.GetClaimsAsync(user);
-            var Claims = new List<Claim>
-            {
-                new Claim (JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim (JwtRegisteredClaimNames.Email, user.Email),
+            claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-
-            }.Union(UserClaims).Union(RoleClaims);
-
+            // 🔧 Use HMAC SHA256 to match your Program.cs validation
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JwtSettings:Issuer"],
-                audience: _configuration["JwtSettings:Audiance"],
-                claims: Claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JwtSettings: DurationInMinutes"])),
+                issuer: issuer,
+                audience: audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(durationInMinutes),
                 signingCredentials: credentials
-                );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            );
 
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(token);
         }
     }
 }

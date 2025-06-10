@@ -34,8 +34,13 @@ namespace FirstSection.Controllers
                 }
                 return BadRequest(ModelState);
             }
-
-            return Ok(new { message = "Registration successful!" });
+            LoginDto loginDto = new LoginDto
+            {
+                Email = apiUserDto.Email,
+                Password = apiUserDto.Password
+            };
+            var authResponse = await _authManager.Login(loginDto);
+            return Ok(authResponse);
         }
 
         // POST: api/account/login

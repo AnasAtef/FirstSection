@@ -1,6 +1,5 @@
 ﻿using FirstSection.Contracts;
 using FirstSection.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 namespace FirstSection.Repository
 {
@@ -24,6 +23,14 @@ namespace FirstSection.Repository
         {
             var entity = await GetAsync(id);
             _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var entity = await GetAsync(id);
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> Exists(int id)
@@ -39,7 +46,16 @@ namespace FirstSection.Repository
                 return null;
             }
             return await _context.Set<T>().FindAsync(id);
-        } 
+        }
+
+        public async Task<T> GetAsync(Guid? id)
+        {
+            if (id is null)
+            {
+                return null;
+            }
+            return await _context.Set<T>().FindAsync(id);
+        }
 
         public async Task<List<T>> GetAllAsync()
         {

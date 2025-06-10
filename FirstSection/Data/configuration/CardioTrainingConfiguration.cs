@@ -4,51 +4,92 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FirstSection.Data.configurations
 {
-    public class CardioTrainingConfiguration : IEntityTypeConfiguration<CardioTraining>
+    public class TrainingConfiguration : IEntityTypeConfiguration<Training>
     {
-        public void Configure(EntityTypeBuilder<CardioTraining> builder)
+        public void Configure(EntityTypeBuilder<Training> builder)
         {
             builder.HasData(
-                new CardioTraining
+                new Training
                 {
                     Id = new Guid("5FAE9D1B-E8A5-436B-B342-AB3AB86AF86B"),
                     Name = "2-Day",
                     Description = "Steady-state cardio with moderate intensity including treadmill walking and cycling, combined with a light interval session for beginners.",
                     NumberOfDays = 2,
-                    FitnessCategoryId=2
+                    FitnessCategoryId = 2
                 },
-                new CardioTraining
+                new Training
                 {
-                    Id = new  Guid("C305CD4E-842A-4853-B3F1-7C33B39B4A26") ,
+                    Id = new Guid("C305CD4E-842A-4853-B3F1-7C33B39B4A26"),
                     Name = "3-Day",
                     Description = "A mix of steady-state cardio and HIIT workouts designed for improved stamina and fat burning with balanced intensity progression.",
                     NumberOfDays = 3,
                     FitnessCategoryId = 2
                 },
-                new CardioTraining
+                new Training
                 {
-                    Id = new  Guid("83B922AA-578E-44A2-B985-0A0982C70BEB"),
+                    Id = new Guid("83B922AA-578E-44A2-B985-0A0982C70BEB"),
                     Name = "4-Day",
                     Description = "Alternates between endurance sessions at moderate pace and high-intensity interval training for balanced cardiovascular development.",
                     NumberOfDays = 4,
                     FitnessCategoryId = 2
                 },
-                new CardioTraining
+                new Training
                 {
-                    Id = new  Guid("8CF63A99-D589-4541-8F30-E270D9AC8C68") ,
+                    Id = new Guid("8CF63A99-D589-4541-8F30-E270D9AC8C68"),
                     Name = "5-Day",
                     Description = "Comprehensive aerobic and anaerobic conditioning including sprints, jump rope, and stair climbing for advanced cardiovascular fitness.",
                     NumberOfDays = 5,
                     FitnessCategoryId = 2
                 },
-                new CardioTraining
+                new Training
                 {
                     Id = new Guid("27AAF090-D342-4DB3-A1E4-5030F1FFED61"),
                     Name = "6-Day",
                     Description = "Structured mix of HIIT, steady-state, and sport-based cardio including rowing and agility drills for advanced endurance training.",
                     NumberOfDays = 6,
                     FitnessCategoryId = 2
-                }
+                },
+          new Training
+          {
+              Id = new Guid("F6A88AC7-C89E-4E33-B408-459F67855B0E"),
+              Name = "2-Day",
+              Description = "Upper/Lower split designed for those who can commit to 2 days per week at the gym, alternating between upper body and lower body training sessions.",
+              NumberOfDays = 2,
+              FitnessCategoryId = 1
+          },
+          new Training
+          {
+              Id = new Guid("a935dc47-736f-49cd-b91e-f078e638d4e2"),
+              Name = "3-Day",
+              Description = "Push-Pull-Legs (PPL) routine for 3 days per week, focusing on pushing movements, pulling movements, and leg exercises in separate sessions.",
+              NumberOfDays = 3,
+              FitnessCategoryId = 1
+          },
+          new Training
+          {
+              Id = new Guid("D924DE9B-3781-49D2-BE5A-7F7219EC8A10"),
+              Name = "4-Day",
+              Description = "A well-balanced routine optimized for four days of training per week, providing comprehensive muscle development with adequate recovery time.",
+              NumberOfDays = 4,
+              FitnessCategoryId = 1
+          },
+          new Training
+          {
+              Id = new Guid("861EE843-D417-4671-8E5D-D00D7D0CE3DC"),
+              Name = "5-Day",
+              Description = "Arnold Split routine for 5 days per week, known for its focus on muscle group variations and high training frequency for advanced lifters.",
+              NumberOfDays = 5,
+              FitnessCategoryId = 1
+          },
+          new Training
+          {
+              Id = new Guid("E33DFE70-63EA-4429-BF83-D4D0B427822F"),
+              Name = "6-Day",
+              Description = "Push-Pull-Legs (PPL) performed twice per week for increased training volume, designed for experienced lifters seeking maximum muscle growth.",
+              NumberOfDays = 6,
+              FitnessCategoryId = 1
+          }
+
             );
         }
     }

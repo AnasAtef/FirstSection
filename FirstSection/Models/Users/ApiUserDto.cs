@@ -2,14 +2,19 @@
 
 namespace FirstSection.Models.Users
 {
-    public class ApiUserDto:LoginDto
+    public class ApiUserDto : LoginDto
     {
         [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-       
-        
+        public int? Weight { get; set; }
+        public int? Age { get; set; }
+        public int? Height { get; set; }
+
+        public string GenderId { get; set; }
+
+
     }
     public class LoginDto
     {
